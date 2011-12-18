@@ -41,8 +41,8 @@ public class Donkey {
             if (line.length() < 2) {
                 break;
             }
+            wallMap.add(rowNum, new ArrayList<Boolean>());
             for (int i = 0; i < line.length(); i++) {
-                wallMap.add(rowNum, new ArrayList<Boolean>());
                 if (line.charAt(i) == '#') {
                     wallMap.get(rowNum).add(false);
                 }
