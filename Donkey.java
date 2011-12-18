@@ -67,7 +67,7 @@ public class Donkey {
             if(next.length == 0) break;
             charlies.add(new Things.Enemy(next[1], Integer.parseInt(next[2]), Integer.parseInt(next[3]),
                     Boolean.parseBoolean(next[4]), next[5]));
-        }
+        } while(next.length > 0);
         
         
     }
