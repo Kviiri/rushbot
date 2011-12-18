@@ -87,7 +87,7 @@ public class Donkey {
         enemyFlag = new Things.EnemyFlag(Integer.parseInt(next[1]), Integer.parseInt(next[2]));
         do {
             next = lue.nextLine().split(" ");
-            if (next.length == 0) {
+            if (next.length < 6) {
                 break;
             }
             
