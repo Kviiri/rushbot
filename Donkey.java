@@ -1,24 +1,44 @@
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * The grand strategy of the AI for the CTF game.
  * @author kviiri
  */
 public class Donkey {
-    private ArrayList<Lion> expendables;
+    private HashMap<String, Lion> expendables;
     private ArrayList<Things.Enemy> charlies;
-    
+    Scanner lue;
     
     private float[][][][] dist;       //fromX fromY toX toY
-    private boolean[][] map;        //true = passable, false = not passable
+    private ArrayList<ArrayList<Boolean>> wallMap;       //true = passable, false = not passable
+    private boolean team;           //true = A, false = B
+    private int ourScore;
+    private int theirScore;
     public Donkey() {
-        this.expendables = new ArrayList<Lion>();
+        this.expendables = new HashMap<String, Lion>();
         this.charlies = new ArrayList<Things.Enemy>();
-        //TODO: Populate expendables
-        //TODO: Populate charlies
-        //TODO: Parse wallmap
         dist = floydWarshall(2, 2);
+        lue = new Scanner(System.in);
+        
+    }
+    private void parseInitialEngineOutput() {
+        if(lue.nextLine().equals("A")) team = true;
+        else team = false;
+        int rowNum = 0;
+        while(lue.hasNextLine()) {
+            String line = lue.nextLine();
+            if(line.length() < 2) break;
+            for(int i = 0; i < line.length(); i++) {
+                if(line.charAt(i) == '#') wallMap.get(rowNum).add(false);
+            }
+            rowNum++;
+        }
+        
+    }
+    private void parseTurnEngineOutPut() {
         
     }
     private float[][][][] floydWarshall(int xSize, int ySize) {
