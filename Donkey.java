@@ -51,10 +51,6 @@ public class Donkey {
                     wallMap.get(rowNum).add(false);
                 }
                 else {
-                    if((line.charAt(i) == 'a' && team) || (line.charAt(i) == 'b' && !team)) {
-                        flagStandX = i;
-                        flagStandY = rowNum;
-                    }
                     wallMap.get(rowNum).add(true);
                 }
                 
@@ -134,7 +130,11 @@ public class Donkey {
                                 if (!wallMap.get(yDest).get(xDest)) {
                                     ret[xAt][yAt][xDest][yDest] = Float.POSITIVE_INFINITY;
                                     continue;
-                                } //if neighbor, distance is 1
+                                } //No short paths FROM walls either
+                                if(!wallMap.get(yAt).get(xAt)) {
+                                    ret[xAt][yAt][xDest][yDest] = Float.POSITIVE_INFINITY;
+                                }
+                                //if neighbor, distance is 1
                                 else if (Math.abs(yAt - yDest) + Math.abs(xAt - xDest) == 1) {
                                     ret[xAt][yAt][xDest][yDest] = 1;
                                     continue;
@@ -153,8 +153,14 @@ public class Donkey {
 
     public static void main(String[] args) {
         Donkey brain = new Donkey();
+        boolean firstRound = true;
         while (true) {
             brain.parseTurnEngineOutPut();
+            if(firstRound) { 
+                brain.flagStandX = brain.ourFlag.x;
+                brain.flagStandY = brain.ourFlag.y;
+                firstRound = false;
+            }
             for (Lion l : brain.expendables.values()) {
                 System.out.println(l.soldier.name + " " + l.getAction());
             }
