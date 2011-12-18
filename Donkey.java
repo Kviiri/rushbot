@@ -81,12 +81,14 @@ public class Donkey {
             grenades.add(new Things.Grenade(Integer.parseInt(next[1]), Integer.parseInt(next[2]), Integer.parseInt(next[3])));
             next = lue.nextLine().split(" ");
         } while (next[0].equals("Grenade"));
+        charlies.clear();
         enemyFlag = new Things.EnemyFlag(Integer.parseInt(next[1]), Integer.parseInt(next[2]));
         do {
             next = lue.nextLine().split(" ");
             if (next.length == 0) {
                 break;
             }
+            
             charlies.add(new Things.Enemy(next[1], Integer.parseInt(next[2]), Integer.parseInt(next[3]),
                     Boolean.parseBoolean(next[4]), next[5]));
         } while (next.length > 0);
@@ -116,7 +118,7 @@ public class Donkey {
                         for (int xDest = 0; xDest < xSize; xDest++) {
                             for (int yDest = 0; yDest < ySize; yDest++) {
                                 //if blocked
-                                if (!map[xDest][yDest]) {
+                                if (!wallMap.get(yDest).get(xDest)) {
                                     dist[xAt][yAt][xDest][yDest] = Float.POSITIVE_INFINITY;
                                     continue;
                                 } //if neighbor, distance is 1
