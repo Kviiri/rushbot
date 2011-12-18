@@ -25,8 +25,8 @@ public class Donkey {
         this.expendables = new HashMap<String, Lion>();
         this.charlies = new ArrayList<Things.Enemy>();
         lue = new Scanner(System.in);
-        dist = floydWarshall(2, 2);
-
+        parseInitialEngineOutput();
+        this.dist = floydWarshall(wallMap.get(0).size(), wallMap.size());
     }
 
     private void parseInitialEngineOutput() {
@@ -140,5 +140,11 @@ public class Donkey {
 
     public static void main(String[] args) {
         Donkey brain = new Donkey();
+        while(brain.lue.hasNextLine()) {
+            brain.parseTurnEngineOutPut();
+            for(Lion l : brain.expendables.values()) {
+                System.out.println(l.getAction());
+            }
+        }
     }
 }
