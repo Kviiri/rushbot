@@ -1,6 +1,7 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -26,6 +27,7 @@ public class Donkey {
     public Donkey() {
         this.expendables = new HashMap<String, Lion>();
         this.charlies = new ArrayList<Things.Enemy>();
+        this.grenades = new ArrayList<Things.Grenade>();
         lue = new Scanner(System.in);
         wallMap = new ArrayList<ArrayList<Boolean>>();
         parseInitialEngineOutput();
@@ -49,11 +51,10 @@ public class Donkey {
             for (int i = 0; i < line.length(); i++) {
                 if (line.charAt(i) == '#') {
                     wallMap.get(rowNum).add(false);
-                }
-                else {
+                } else {
                     wallMap.get(rowNum).add(true);
                 }
-                
+
             }
             rowNum++;
         }
@@ -131,10 +132,9 @@ public class Donkey {
                                     ret[xAt][yAt][xDest][yDest] = Float.POSITIVE_INFINITY;
                                     continue;
                                 } //No short paths FROM walls either
-                                if(!wallMap.get(yAt).get(xAt)) {
+                                if (!wallMap.get(yAt).get(xAt)) {
                                     ret[xAt][yAt][xDest][yDest] = Float.POSITIVE_INFINITY;
-                                }
-                                //if neighbor, distance is 1
+                                } //if neighbor, distance is 1
                                 else if (Math.abs(yAt - yDest) + Math.abs(xAt - xDest) == 1) {
                                     ret[xAt][yAt][xDest][yDest] = 1;
                                     continue;
@@ -153,16 +153,24 @@ public class Donkey {
 
     public static void main(String[] args) {
         Donkey brain = new Donkey();
+        Random rnd = new Random();
         boolean firstRound = true;
         while (true) {
             brain.parseTurnEngineOutPut();
-            if(firstRound) { 
+            if (firstRound) {
                 brain.flagStandX = brain.ourFlag.x;
                 brain.flagStandY = brain.ourFlag.y;
                 firstRound = false;
             }
             for (Lion l : brain.expendables.values()) {
-                System.out.println(l.soldier.name + " " + l.getAction());
+                String action = l.soldier.name + " " + l.getAction();
+                if (Math.random() < 0.3) {
+                    Things.Enemy target = brain.charlies.get(rnd.nextInt(brain.charlies.size()));
+                    if (target.alive) {
+                        action += " (" + (target.x - 1 + rnd.nextInt(3)) + "," + (target.y - 1 + rnd.nextInt(3))+")";
+                    }
+                }
+                System.out.println(action);
             }
             System.out.println("");
         }
