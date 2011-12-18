@@ -1,3 +1,6 @@
+
+import java.util.Random;
+
 /**
  * The AI for a single brave soldier
  * @author kviiri
@@ -24,7 +27,7 @@ public class Lion {
         soldier = s;
         this.boss = boss;
     }
-    private String getAction() {
+    public String getAction() {
         switch(state) {
             case STATE_REINFORCE :
                 return getReinforceAction();
@@ -50,8 +53,7 @@ public class Lion {
     }
 
     private String getReinforceAction() {
-        boolean readyAimFire = false;
-        if(enemyInRange && soldier.cooldown == 0)  readyAimFire = true;
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     private String getDefensiveCruiseAction() {
@@ -67,7 +69,17 @@ public class Lion {
     }
 
     private String getRushAction() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        if(!boss.weHaveFlag()) {
+            return boss.getMoveOrder(this.soldier.x, this.soldier.y, boss.enemyFlag.x, boss.enemyFlag.y);
+        }
+        else {
+            if(this.soldier.flag.equalsIgnoreCase("No")) {
+                if(Math.random() < 0.6) {
+                    return getRandomAction();
+                }
+            }
+            return boss.getMoveOrder(this.soldier.x, this.soldier.y, boss.ourFlag.x, boss.ourFlag.y);
+        }
     }
 
     private String getOffenseAction() {
@@ -80,5 +92,15 @@ public class Lion {
 
     private String getInterceptAction() {
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+    private String getRandomAction() {
+        Random rnd = new Random();
+        int action = rnd.nextInt(5);
+        if(action == 0) return "S";
+        if(action == 1) return "U";
+        if(action == 2) return "R";
+        if(action == 3) return "D";
+        if(action == 4) return "L";
+        return "S";
     }
 }

@@ -18,8 +18,8 @@ public class Donkey {
     private boolean team;           //true = A, false = B
     private int ourScore;
     private int theirScore;
-    private Things.Flag ourFlag;
-    private Things.EnemyFlag enemyFlag;
+    public Things.Flag ourFlag;
+    public Things.EnemyFlag enemyFlag;
 
     public Donkey() {
         this.expendables = new HashMap<String, Lion>();
@@ -111,6 +111,7 @@ public class Donkey {
                 }
             }
         }
+        //Yo dawg, I herd you like loops so I put loops inside the loops inside your loops, so you can loop while you loop the loop
         for (int xBetween = 0; xBetween < xSize; xBetween++) {
             for (int yBetween = 0; yBetween < ySize; yBetween++) {
                 for (int xAt = 0; xAt < xSize; xAt++) {
@@ -146,5 +147,33 @@ public class Donkey {
                 System.out.println(l.getAction());
             }
         }
+    }
+    //Returns the move direction from xAt, yAt to xDest, yDest
+    public String getMoveOrder(int xAt, int yAt, int xDest, int yDest) {
+        float best = Float.POSITIVE_INFINITY;
+        String ret = "S";
+        if(xAt > 0 && best > dist[xAt-1][yAt][xDest][yDest]) {
+            best = (int)dist[xAt-1][yAt][xDest][yDest];
+            ret = "L";
+        }
+        if(xAt < dist.length - 1 && best > dist[xAt+1][yAt][xDest][yDest]) {
+            best = (int)dist[xAt+1][yAt][xDest][yDest];
+            ret = "R";
+        }
+         if(yAt > 0 && best > dist[xAt][yAt-1][xDest][yDest]) {
+            best = (int)dist[xAt][yAt-1][xDest][yDest];
+            ret = "U";
+        }
+        if(yAt < dist.length - 1 && best > dist[xAt][yAt+1][xDest][yDest]) {
+            best = (int)dist[xAt][yAt+1][xDest][yDest];
+            ret = "D";
+        }
+        return ret;
+    }
+    public boolean weHaveFlag() {
+        for(Lion l : expendables.values()) {
+            if(l.soldier.flag.equals("A") || l.soldier.flag.equals("B")) return true;
+        }
+        return false;
     }
 }
