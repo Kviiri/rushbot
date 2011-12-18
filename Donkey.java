@@ -25,12 +25,13 @@ public class Donkey {
         this.expendables = new HashMap<String, Lion>();
         this.charlies = new ArrayList<Things.Enemy>();
         lue = new Scanner(System.in);
+        wallMap = new ArrayList<ArrayList<Boolean>>();
         parseInitialEngineOutput();
         this.dist = floydWarshall(wallMap.get(0).size(), wallMap.size());
     }
 
     private void parseInitialEngineOutput() {
-        wallMap = new ArrayList<ArrayList<Boolean>>();
+
         if (lue.nextLine().equals("A")) {
             team = true;
         } else {
@@ -46,6 +47,9 @@ public class Donkey {
             for (int i = 0; i < line.length(); i++) {
                 if (line.charAt(i) == '#') {
                     wallMap.get(rowNum).add(false);
+                }
+                else {
+                    wallMap.get(rowNum).add(true);
                 }
             }
             rowNum++;
@@ -68,8 +72,7 @@ public class Donkey {
             if (expendables.containsKey(next[1])) {
                 expendables.get(next[1]).soldier = new Things.Soldier(next[1], Integer.parseInt(next[2]), Integer.parseInt(next[3]),
                         Integer.parseInt(next[4]), Boolean.parseBoolean(next[5]), next[6]);
-            }
-            else {
+            } else {
                 expendables.put(next[1], new Lion(Lion.STATE_RUSH, new Things.Soldier(next[1], Integer.parseInt(next[2]), Integer.parseInt(next[3]),
                         Integer.parseInt(next[4]), Boolean.parseBoolean(next[5]), next[6]), this));
             }
@@ -90,10 +93,10 @@ public class Donkey {
             if (next.length < 6) {
                 break;
             }
-            
+
             charlies.add(new Things.Enemy(next[1], Integer.parseInt(next[2]), Integer.parseInt(next[3]),
                     Boolean.parseBoolean(next[4]), next[5]));
-        } while (next.length > 0);
+        } while (next.length == 6);
 
 
     }
@@ -122,15 +125,15 @@ public class Donkey {
                             for (int yDest = 0; yDest < ySize; yDest++) {
                                 //if blocked
                                 if (!wallMap.get(yDest).get(xDest)) {
-                                    dist[xAt][yAt][xDest][yDest] = Float.POSITIVE_INFINITY;
+                                    ret[xAt][yAt][xDest][yDest] = Float.POSITIVE_INFINITY;
                                     continue;
                                 } //if neighbor, distance is 1
                                 else if (Math.abs(yAt - yDest) + Math.abs(xAt - xDest) == 1) {
-                                    dist[xAt][yAt][xDest][yDest] = 1;
+                                    ret[xAt][yAt][xDest][yDest] = 1;
                                     continue;
                                 } else {
-                                    dist[xAt][yAt][xDest][yDest] = Math.min(dist[xAt][yAt][xDest][yDest],
-                                            dist[xAt][yAt][xBetween][yBetween] + dist[xBetween][yBetween][xDest][yDest]);
+                                    ret[xAt][yAt][xDest][yDest] = Math.min(ret[xAt][yAt][xDest][yDest],
+                                            ret[xAt][yAt][xBetween][yBetween] + ret[xBetween][yBetween][xDest][yDest]);
                                 }
                             }
                         }
@@ -143,38 +146,44 @@ public class Donkey {
 
     public static void main(String[] args) {
         Donkey brain = new Donkey();
-        while(brain.lue.hasNextLine()) {
+        while (true) {
             brain.parseTurnEngineOutPut();
-            for(Lion l : brain.expendables.values()) {
-                System.out.println(l.getAction());
+            for (Lion l : brain.expendables.values()) {
+                System.out.println(l.soldier.name + " " + l.getAction());
             }
         }
     }
     //Returns the move direction from xAt, yAt to xDest, yDest
+
     public String getMoveOrder(int xAt, int yAt, int xDest, int yDest) {
         float best = Float.POSITIVE_INFINITY;
         String ret = "S";
-        if(xAt > 0 && best > dist[xAt-1][yAt][xDest][yDest]) {
-            best = (int)dist[xAt-1][yAt][xDest][yDest];
-            ret = "L";
+        if (xAt > 0) {
+            if (best > dist[xAt - 1][yAt][xDest][yDest]) {
+                best = (int) dist[xAt - 1][yAt][xDest][yDest];
+                ret = "L";
+            }
         }
-        if(xAt < dist.length - 1 && best > dist[xAt+1][yAt][xDest][yDest]) {
-            best = (int)dist[xAt+1][yAt][xDest][yDest];
+        if (xAt < dist.length - 1 && best > dist[xAt + 1][yAt][xDest][yDest]) {
+            best = (int) dist[xAt + 1][yAt][xDest][yDest];
             ret = "R";
         }
-         if(yAt > 0 && best > dist[xAt][yAt-1][xDest][yDest]) {
-            best = (int)dist[xAt][yAt-1][xDest][yDest];
+        if (yAt > 0 && best > dist[xAt][yAt - 1][xDest][yDest]) {
+            best = (int) dist[xAt][yAt - 1][xDest][yDest];
             ret = "U";
         }
-        if(yAt < dist.length - 1 && best > dist[xAt][yAt+1][xDest][yDest]) {
-            best = (int)dist[xAt][yAt+1][xDest][yDest];
+        if (yAt < dist.length - 1 && best > dist[xAt][yAt + 1][xDest][yDest]) {
+            best = (int) dist[xAt][yAt + 1][xDest][yDest];
             ret = "D";
         }
         return ret;
     }
+
     public boolean weHaveFlag() {
-        for(Lion l : expendables.values()) {
-            if(l.soldier.flag.equals("A") || l.soldier.flag.equals("B")) return true;
+        for (Lion l : expendables.values()) {
+            if (l.soldier.flag.equals("A") || l.soldier.flag.equals("B")) {
+                return true;
+            }
         }
         return false;
     }
