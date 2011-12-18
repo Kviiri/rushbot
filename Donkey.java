@@ -30,6 +30,7 @@ public class Donkey {
     }
 
     private void parseInitialEngineOutput() {
+        wallMap = new ArrayList<ArrayList<Boolean>>();
         if (lue.nextLine().equals("A")) {
             team = true;
         } else {
