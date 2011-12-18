@@ -70,7 +70,8 @@ public class Lion {
 
     private String getRushAction() {
         if(!boss.weHaveFlag()) {
-            return boss.getMoveOrder(this.soldier.x, this.soldier.y, boss.enemyFlag.x, boss.enemyFlag.y);
+            if(Math.random() < 0.8) return boss.getMoveOrder(this.soldier.x, this.soldier.y, boss.enemyFlag.x, boss.enemyFlag.y);
+            else return getRandomAction();
         }
         else {
             if(this.soldier.flag.equalsIgnoreCase("No")) {
@@ -78,7 +79,7 @@ public class Lion {
                     return getRandomAction();
                 }
             }
-            return boss.getMoveOrder(this.soldier.x, this.soldier.y, boss.ourFlag.x, boss.ourFlag.y);
+            return boss.getMoveOrder(this.soldier.x, this.soldier.y, boss.flagStandX, boss.flagStandY);
         }
     }
 

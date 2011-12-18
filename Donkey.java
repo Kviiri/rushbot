@@ -20,6 +20,8 @@ public class Donkey {
     private int theirScore;
     public Things.Flag ourFlag;
     public Things.EnemyFlag enemyFlag;
+    public int flagStandX;
+    public int flagStandY;
 
     public Donkey() {
         this.expendables = new HashMap<String, Lion>();
@@ -49,8 +51,13 @@ public class Donkey {
                     wallMap.get(rowNum).add(false);
                 }
                 else {
+                    if((line.charAt(i) == 'a' && team) || (line.charAt(i) == 'b' && !team)) {
+                        flagStandX = i;
+                        flagStandY = rowNum;
+                    }
                     wallMap.get(rowNum).add(true);
                 }
+                
             }
             rowNum++;
         }
@@ -151,6 +158,7 @@ public class Donkey {
             for (Lion l : brain.expendables.values()) {
                 System.out.println(l.soldier.name + " " + l.getAction());
             }
+            System.out.println("");
         }
     }
     //Returns the move direction from xAt, yAt to xDest, yDest
